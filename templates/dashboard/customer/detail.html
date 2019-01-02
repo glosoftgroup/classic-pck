@@ -1,0 +1,124 @@
+{% extends "dashboard/base.html" %}
+{% load staticfiles %}
+{% load i18n %}
+{% load prices_i18n %}
+
+{% block title %}
+  Customer
+{% endblock %}
+{% block breadcrumbs %}
+<li class="active"><a href="{% url 'dashboard:customers' %}">Customer</a></li>
+<li class="active"><a href="javascript:;">Detail</a></li>
+{% endblock %}
+{% block menu_addCustomer_class %}active{% endblock %}
+
+{% block custom_css %}
+   <style type="text/css">
+      .theme_xbox .pace_activity, .theme_xbox .pace_activity::after, .theme_xbox .pace_activity::before, .theme_xbox_sm .pace_activity, .theme_xbox_sm .pace_activity::after, .theme_xbox_sm .pace_activity::before, .theme_xbox_xs .pace_activity, .theme_xbox_xs .pace_activity::after, .theme_xbox_xs .pace_activity::before {
+        border-radius: 50%;
+        border: 1px solid transparent;
+            border-top-width: 1px;
+            border-right-width: 1px;
+            border-bottom-width: 1px;
+            border-left-width: 1px;
+            border-top-color: transparent;
+        border-top-color: #1649fc;
+    }
+    .pace-demo {
+        background-color:#fff;
+    }
+    @media print {
+       #printBtn {
+          display: none;
+       }
+       #addPayment {
+          display: none;
+       }
+       .media-none {
+          display: none;
+       }
+       #media-none {
+          display: none;
+       }
+    }
+    .customer-details{
+      list-style-type: none;
+      padding-left:0px !important;
+    }
+    .customer-details li {
+        padding: 10px 15px;
+        border-top: 1px solid #efefef;
+        margin-bottom: 15px;
+    }
+    .customer-details li span{
+      padding-bottom: 15px;
+    }
+    .display_label{font-size: 15px !important;text-decoration: underline;}
+    .house_span{
+      padding: 6px 12px;
+      border-radius: 20px;
+      margin: 7px 3px 5px 0px;
+      float: left;
+    }
+    .pagination > .active > a, .pagination > .active > a:hover, .pagination > .active > a:active, .pagination > .active > a:focus{
+      background-color: #607D8B;
+      border-color: #607D8B;
+    }
+    .daterangepicker.dropdown-menu{z-index: 1051 !important}
+   </style>
+ {% endblock %}
+
+
+{% block content %}
+<div class="row">
+  <div class="col-md-12" style="margin-bottom:10px;">
+        <a class="btn btn-primary pull-left legitRipple" href="{% url 'dashboard:customers' %}"><i class="icon-arrow-left13 position-left"></i> Back to Customers list</a>
+        <a class="btn btn-primary pull-right legitRipple" data-url="" href="{% url 'dashboard:customer-edit' pk=user.pk %}"><i class="icon-pencil position-left"></i> EDIT</a>
+  </div>
+  <div class="col-md-3">
+  {% include 'dashboard/customer/partials/profile.html' with customer=user %}
+  </div>
+  <div class="col-md-9">
+  {% include 'dashboard/customer/partials/tabs.html' with customer=user room=room %}
+  </div>
+  {% include 'dashboard/customer/partials/modal_add_payment.html' with customer=user room=room %}
+  {% if user %}
+  <input type="hidden" name="tenantPk" id="tenantPk" value="{{user.pk}}">
+  <input type="hidden" name="postUrl" id="postUrl" value="{% url 'dashboard:rent-payment' pk=user.pk %}"/>
+  <input type="hidden" name="redirectUrl" id="redirectUrl" value="{% url 'dashboard:customer-detail' pk=user.pk %}"/>
+  <input type="hidden" name="minimumBalance" id="minimumBalance" value="{% if booking.balance_with_charges.gross == 0%} {{booking.balance.gross}} {% else %} {{booking.balance_with_charges.gross}} {% endif %}"/>
+  {% endif %}
+
+
+</div>
+
+{% endblock %}
+
+{% block custom_js %}
+  <script type="text/javascript" src="{% static 'backend/js/plugins/forms/selects/bootstrap_multiselect.js' %}"></script>
+  <script type="text/javascript" src="{% static 'backend/js/pages/form_multiselect.js' %}"></script>
+<script type="text/javascript" src="{% static 'backend/js/plugins/forms/selects/bootstrap_select.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'backend/js/plugins/pagination/jquery.twbsPagination.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'backend/js/plugins/loaders/progressbar.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'backend/js/plugins/vue/vue.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'backend/js/plugins/vue/vue-resource.js' %}"></script>
+<script type="text/javascript" src="{% static 'backend/js/booking/vue/listing.js' %}"></script>
+<script type="text/javascript" src="{% static 'backend/js/plugins/vue/axios.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'backend/js/customer/payment.js' %}"></script>
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('.bootstrap-select').selectpicker();
+  });
+
+  {% if request.GET.payments %}
+    $.when( $.ready ).then(function() {     
+       $('#bio-tab').removeClass('active');
+       $('#bio').removeClass('active');
+       //activate pricing tab
+       $('#payment-tab').addClass('active');
+       $('#payment').addClass('active');                     
+    });
+  {% endif %}
+
+</script>
+{% endblock %}

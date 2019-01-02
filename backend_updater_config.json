@@ -1,0 +1,30 @@
+{
+  "version": "1.0.0",
+  "last_version": "0.0.0",
+  "changelog": {
+    "date": "Images/Sun.png",
+    "name": "sun1",
+    "notes": "<notes>"
+  },
+  "target": "1.0.1",
+  "type": "backend",
+  "packagejson": true,
+  "migrations": true,
+  "webpackconfig": true,
+  "targetmachine": "mac-address",
+  "commithash": "<hash>",
+  "changedfiles": [
+    ".gitignore",
+    "LICENSE",
+    "README.md",
+    "backend_updater_config.json",
+    "docs/",
+    "locale/",
+    "package.json",
+    "requirements.txt",
+    "saleor/",
+    "templates/",
+    "tests/",
+    "webpack.config.js"
+  ]
+}

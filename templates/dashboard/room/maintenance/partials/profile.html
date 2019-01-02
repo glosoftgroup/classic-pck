@@ -1,0 +1,81 @@
+{% load static %}
+<div class="row">
+	<div class="col-sm-12">
+
+		<!-- User details (with sample pattern) -->
+		<div class="content-group">
+			<div class="panel-body bg-slate border-radius-tops text-center"
+                         style="border-radius:5px 5px 0px 0px;
+                          box-shadow: 0 1px 3px rgba(0,0,0,.12),0 1px 2px rgba(0,0,0,.24);
+                          {% if room.room_images.first.image %}
+                          background-image: url('{{ room.room_images.first.image.url }}');
+                          {% else %}
+                          background-image: url('/static/backend/images/bg.png');
+                          {% endif %}
+                          background-position: center;
+                          background-repeat: no-repeat;
+                          background-size: cover;">
+
+
+				<div class="content-group-sms">
+                    <div style="width: 100px;height: 100px;"></div>
+                    <h1 class="text-semibold no-margin-bottom text-center" 
+                    	style="background: rgba(0,0,0,0.75);">
+                         {% if room.pk %}
+                         {{room.name}}
+                         {% endif %}
+                    </h1>
+                    <span class="display-block"></span>
+                </div>
+
+				
+
+				
+			</div>
+
+			<div class="panel panel-body no-border-top no-border-radius-top" style="padding: 0px !important;">
+				<ul class="customer-details">
+					<li class="text-semibold">
+						<span class="text-bold">
+							{% if room.room_type or room.room_wing %}
+								{{room.room_type|title}} - {{room.room_wing}} 
+							{% else %}
+							---
+							{% endif %}
+						</span>
+					</li>
+					<li class="text-semibold">
+						<span class="text-bold">
+							Bedrooms: 
+							{% if room.bedrooms %}
+								 {{room.bedrooms}}
+							{% else %}
+								---
+							{% endif %}
+						</span>
+					</li>
+					<li class="text-semibold">
+						<span class="text-bold">
+							Packing Spaces: 
+							{% if room.parking_space %}
+							{{ room.parking_space }}
+							{% else %}
+								---
+							{% endif %}
+						</span>
+					</li>
+					<li class="text-semibold">
+						<span class="text-bold">Status: 
+							{% if room.is_booked %}
+								Booked {% if customer.name %} {{customer.name}} {% endif %}
+							{% else %}
+								Not Booked
+							{% endif %}
+						</span>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<!-- /user details (with sample pattern) -->		
+	</div>
+</div>

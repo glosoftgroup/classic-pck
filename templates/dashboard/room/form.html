@@ -1,0 +1,720 @@
+{% extends "dashboard/base.html" %}
+{% load staticfiles %}
+{% load i18n %}
+{% load prices_i18n %}
+
+{% block title %}
+  Rooms
+{% endblock %}
+
+ {% block breadcrumbs %}
+     <li class="">
+         <a href="{% url 'dashboard:room-list' %}">Rooms </a>
+     </li>
+     <li class="active">
+         {% if room.pk %}Edit {% else %}Add{% endif %} Rooms
+     </li>
+ {% endblock %}
+
+
+{% block menu_rooms_class %}active{% endblock %}
+
+{% block custom_css %}
+<link href="{% static 'backend/js/plugins/tokenize/tokenize2.css' %}" rel="stylesheet" type="text/css">
+<style lang="css" scoped>
+    .vue_component__upload--image{
+        padding: 5px;
+        min-height: 80px;
+        border-radius: 5px;
+        border: 2px;
+    }
+    .vue_component__upload--image.dragover{}
+    .vue_component__upload--image form {
+        background-color: #eeeded;
+        border-style: dotted;
+        border-radius: 5px;
+        color: white;
+        padding:12px;
+        cursor: pointer;
+    }
+    .vue_component__upload--image form > div{
+        text-align: center;
+
+    }
+
+    .vue_component__upload--image .upload_image_form__thumbnails{
+        margin-bottom: 1em;
+    }
+    .vue_component__upload--image .upload_image_form__thumbnail{
+        border-radius: 2.5px;
+        position:relative;
+        width:20%;
+        padding:20% 0 0;
+        overflow: hidden;
+        margin:10px;
+        display:inline-block;
+    }
+
+    .vue_component__upload--image .upload_image_form__thumbnail img{
+        position: absolute;
+        top:50%;
+        left: 50%;
+        min-width: 100%;
+        min-height: 100%;
+        max-height: 150%;
+        opacity: 0;
+        transform: translateX(-50%) translateY(-50%);
+        transition: 1s opacity;
+    }
+    .vue_component__upload--image .upload_image_form__thumbnail img.show{
+        opacity: 1;
+    }
+    .vue_component__upload--image .upload_image_form__thumbnail img:hover{
+        filter: blur(2px);
+    }
+    .vue_component__upload--image .upload_image_form__thumbnail.bad-size img{
+        filter: grayscale(100%);
+    }
+    .vue_component__upload--image .upload_image_form__thumbnail.uploaded img{
+        opacity: 0.1;
+    }
+    .vue_component__upload--image .upload_image_form__thumbnail span{
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        z-index: 100;
+        padding: 0px 1px;
+        border-radius: 2px;
+    }
+    textarea.form-control {
+        height: 68px;
+    }
+</style>
+<style type="text/css">
+      .theme_xbox .pace_activity, .theme_xbox .pace_activity::after, .theme_xbox .pace_activity::before, .theme_xbox_sm .pace_activity, .theme_xbox_sm .pace_activity::after, .theme_xbox_sm .pace_activity::before, .theme_xbox_xs .pace_activity, .theme_xbox_xs .pace_activity::after, .theme_xbox_xs .pace_activity::before {
+        border-radius: 50%;
+        border: 1px solid transparent;
+            border-top-width: 1px;
+            border-right-width: 1px;
+            border-bottom-width: 1px;
+            border-left-width: 1px;
+            border-top-color: transparent;
+        border-top-color: #1649fc;
+    }
+    .pace-demo {
+        background-color:#fff;
+    }
+    @media print {
+       #printBtn {
+          display: none;
+       }
+       #addPayment {
+          display: none;
+       }
+       .media-none {
+          display: none;
+       }
+       #media-none {
+          display: none;
+       }
+    }
+    .customer-details{
+      list-style-type: none;
+      padding-left:0px !important;
+    }
+    .customer-details li {
+        padding: 10px 15px;
+        border-top: 1px solid #efefef;
+    }
+    .customer-details li span{
+      padding-bottom: 15px;
+    }
+    .display_label{font-size: 15px !important;text-decoration: underline;}
+    .house_span{
+      padding: 6px 12px;
+      border-radius: 20px;
+      margin: 7px 3px 5px 0px;
+      float: left;
+    }
+    .pagination > .active > a, .pagination > .active > a:hover, .pagination > .active > a:active, .pagination > .active > a:focus{
+      background-color: #607D8B;
+      border-color: #607D8B;
+    }
+   </style>
+<style>
+    .error{color:red;}
+    .room-bg{
+     border-radius:5px 5px 0px 0px;
+     box-shadow: 0 1px 3px rgba(0,0,0,.12),0 1px 2px rgba(0,0,0,.24);
+     {% if room.room_images.first.image %}
+      background-image: url('{{ room.room_images.first.image.crop.300x250 }}');
+     {% else %}
+      background-image: url('/static/backend/images/bg.png');
+     {% endif %}
+     background-position: center;
+     background-repeat: no-repeat;
+     background-size: cover;
+     }
+</style>
+<style>
+    .ui-datepicker-header { display:none }
+</style>
+{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-md-3">
+        <div class="row">
+            <div class="col-sm-12 {% if not room.pk %} hidden {% endif %}">
+
+                <div class="content-group">
+                    <div class="panel-body bg-slate border-radius-tops text-center room-bg"
+                         style="">
+                        <div class="content-group-sms">
+                            <div style="width: 100px;height: 100px;"></div>
+                            <h1 class="text-semibold no-margin-bottom text-center"
+                                style="background: rgba(0,0,0,0.75);">
+                                 {% if room.pk %}
+                                 {{room.name}}
+                                 {% endif %}
+                            </h1>
+                            <span class="display-block"></span>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-body no-border-top no-border-radius-top" style="padding: 0px !important;">
+                        <ul class="customer-details">
+                            <li class="text-semibold">
+                                <span class="text-bold">House :</span>
+                                <span class="pull-right">
+                                    {% if room.pk %}
+                                     {{room.name}}
+                                    {% else %}
+                                      ---
+                                    {% endif %}
+                                </span>
+                            </li>
+                            <li class="text-semibold">
+                                <span class="text-bold">Wing :</span>
+                                <span class="pull-right">
+                                    {% if room.room_wing %}
+                                     {{room.room_wing.name}}
+                                    {% else %}
+                                      ---
+                                    {% endif %}
+                                </span>
+                            </li>
+                            <li class="text-semibold">
+                                <span class="text-bold">Type :</span>
+                                <span class="pull-right">
+                                    {% if room.room_type %}
+                                     {{room.room_type.name}}
+                                    {% else %}
+                                      ---
+                                    {% endif %}
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- /user details (with sample pattern) -->
+            </div>
+        </div>
+    </div>
+    <div class="{% if not room.pk %}col-md-12 {% else %}col-md-9 {% endif %}">
+        <div class="panel panel-flat">
+            <div class="panel-body">
+            <div class="tabbable">
+                <ul class="nav nav-tabs nav-tabs-highlight" style="">
+                    <li class="active"><a href="#room-details" data-toggle="tab" class="legitRipple" aria-expanded="true"><i class="icon-info3 position-left"></i> Details</a></li>
+                    <li class=""><a id="tab-availability" {% if room.pk %} href="#room-availability" data-toggle="tab"  class="legitRipple" {% else %} class="disabled" {% endif %} aria-expanded="false"><i class="icon-watch2 position-left"></i> Availability</a></li>
+                    <li class=""><a id="tab-booking" {% if room.pk %} href="#room-booking" data-toggle="tab"  class="legitRipple" {% else %} class="disabled" {% endif %} aria-expanded="false"><i class="icon-history position-left"></i> History</a></li>
+                    <li class=""><a id="tab-images" {% if room.pk %} href="#room-images" data-toggle="tab"  class="legitRipple" {% else %} class="disabled" {% endif %} aria-expanded="false"><i class="icon-images3 position-left"></i> Images</a></li>
+                </ul>
+
+                <div class="tab-content">
+                    <div class="tab-pane active" id="room-details">
+                        <!--room details-->
+                        <div class="panel panel-flat animated fadeIn" id="vue-app">
+                            <script type="text/x-template" id="select2-template">
+                                <select>
+                                    <slot></slot>
+                                </select>
+                            </script>
+                            <div class="panel-body">
+                                <div class="row">
+                                   <form id="room-form" enctype="multipart/form-data" novalidate>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group hidden">
+                                            {% csrf_token %}
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label>Rooms Name:<span class="text-danger">*</span></label>
+                                                    <input  required class="form-control" {% if room.pk %} value="{{room.name}}"{% endif %} name="name" id="name" placeholder="Name" type="text">
+                                                    <span class="help-block text-warning"></span>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-6" id="-div">
+                                                        <label >Wing:<span class="text-danger">*</span></label>
+                                                        <select2 id="wing" :options="wing_options"  v-model="wing">
+                                                            {% if room.room_wing.id %}
+                                                            <option value="{{room.room_wing.id}}">{{room.room_wing}}</option>
+                                                            {% else %}
+                                                            <option disabled value="0">Select wing</option>
+                                                            {% endif %}
+
+                                                        </select2>
+                                                        <span class="help-block text-warning"></span>
+                                                    </div>
+
+                                                    <div class="col-md-6" id="-v">
+                                                        <label >Rooms Type:<span class="text-danger">*</span></label>
+                                                        <select2 :options="propertytype_options" v-model="propertytype">
+                                                            {% if room.room_wing.id %}
+                                                            <option value="{{room.room_type.id}}">{{room.room_type}}</option>
+                                                            {% else %}
+                                                            <option disabled value="0">Select type</option>
+                                                            {% endif %}
+                                                        </select2>
+                                                        <span class="help-block text-warning"></span>
+                                                    </div>
+
+                                                    <div class="col-md-12">
+                                                        <div class="form-group">
+                                                            <label class="text-bold">Bedrooms:</label>
+                                                            <input name="bedrooms" id="bedrooms" placeholder="Bedrooms" class="form-control packages" type="number"  required="required" {% if room.id %} value="{{room.bedrooms}}" {% endif %}>
+                                                            <span class="help-block text-warning"></span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6 hidden">
+                                                        <div class="form-group">
+                                                            <label class="text-bold">Units:</label>
+                                                            <input name="units" id="units" placeholder="units" class="form-control packages" type="number"  required="required" {% if room.id %} value="{{room.units}}" {% endif %}>
+                                                            <span class="help-block text-warning"></span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label class="text-bold">Floor Space:</label>
+                                                            <input name="floor_space" id="floor_space"  placeholder="space in sq" class="form-control packages" type="number" required="required" {% if room.pk %} value="{{ room.floor_space }}" {% endif %}>
+                                                            <span class="help-block text-warning"></span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label class="text-bold">Parking Space:</label>
+                                                            <input name="parking_space" id="parking_space"  placeholder="number of parking" class="form-control packages" type="number" required="required" {% if room.pk %} value="{{ room.parking_space }}" {% endif %}>
+                                                            <span class="help-block text-warning"></span>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="text-bold">Price:</label>
+                                                    <input name="price" id="price"  placeholder="price" class="form-control packages" type="number" required="required" {% if room.pk %} value="{{room.price.gross}}" {% endif %}>
+                                                    <span class="help-block text-warning"></span>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="text-bold">Service charge:</label>
+                                                    <input name="service_charges" id="service_charges"  placeholder="service charges" class="form-control packages" type="number" required="required" {% if room.pk %} value="{{room.service_charges}}" {% endif %}>
+                                                    <span class="help-block text-warning"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Amenities:<span class="text-danger">*</span></label>
+                                            <select class="amenities hidden" multiple>
+                                                {% if room.id %}
+                                                    {% for amenity in room.amenities.all %}
+                                                        <option selected="selected" value="{{amenity.id}}">{{amenity.name}}</option>
+                                                    {% endfor %}
+                                                {% endif %}
+                                            </select>
+                                            <span class="help-block"></span>
+                                            <span class="help-block">Did'nt find what you were looking  for? Add new
+                                                <button type="button" id="add_new_amenities_btn" class="btn bg-primary btn-xs btn-icon legitRipple edit_modal-trigger" data-popup="tooltip" data-original-title="Add New amenity" href="#modal_add_category" id="add-new-category" data-title="Add New category" data-href="/dashboard/categories/add/cat32/" data-csrf="<input type='hidden' name='csrfmiddlewaretoken' value='wvYfCnxhR64GzQeHDIHSCPu6aXxPoxdwf8beDvBggbhlErTqdMlRyzpZC9SUmvdE' />" onclick="return false;">
+                                                   <i class="icon-plus-circle2"></i>
+                                                 </button>
+                                            </span>
+                                        </div>
+                                        <div id="add_new_amenities" style="display:none">
+                                            <label>New amenities:<span class="text-danger">*</span></label>
+                                            <select class="new_amenities hidden" multiple></select>
+                                            <span class="help-block"></span>
+                                            <button type="button" id="new_amenities_btn" class="btn bg-primary btn-xs btn-icon legitRipple edit_modal-trigger" onclick="return false;">
+                                               <i class="icon-plus-circle2"></i> Add
+                                            </button>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Description:</label>
+                                            <textarea  rows="5" cols="5" class="form-control" id="description" name="description" placeholder="Enter description here">{% if room.description %}{{ room.description.strip }}{% endif %}</textarea>
+                                            <span class="help-block text-warning"></span>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" id="room_id" name="room_id" {% if room.id %} value="{{room.id}}" {% endif %}>
+                                    <input type="hidden" id="wing_id" name="wing_id" {% if room.id %} value="{{room.room_wing.id}}" {% endif %}>
+                                    <input type="hidden" id="type_id" name="type_id" {% if room.id %} value="{{room.room_type.id}}" {% endif %}>
+
+                                    <div class="text-right col-md-12">
+                                        <button id="add-room-btn" type="submit" class="btn btn-primary legitRipple">{% if room.id %}Edit{% else %}Add Room{% endif %} <i class="icon-arrow-right14 position-right"></i></button>
+                                    </div>
+                                 </form>
+                                </div>
+                            </div>
+                        </div>
+                        <!--./room details-->
+                    </div>
+                    <!--availability-->
+                    <div class="tab-pane" id="room-availability">
+                        <div class="panel panel-flat animated fadeIn">
+                            <!--Availability-->
+                            {% if room.booking_room.first.check_in %}
+                               <div class="form-group">
+                                   <div class="col-md-6">
+                                    <label>Check-in Date: </label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="icon-calendar22"></i></span>
+                                        <span>{{room.booking_room.first.check_in}}</span>
+                                    </div>
+                                       <!-- Calendar widget -->
+                                        <div class="panel has-scroll">
+                                            <div class="datepicker-check-in no-border"></div>
+                                        </div>
+                                        <!-- /calendar widget -->
+                                   </div>
+                                   <div class="col-md-6">
+                                    <label>Check-out Date: </label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="icon-calendar22"></i></span>
+                                        <span style="margin-top:6px;">{{room.booking_room.first.check_out}}</span>
+
+                                    </div>
+                                       <!-- Calendar widget -->
+                                        <div class="panel has-scroll">
+                                            <div class="datepicker no-border"></div>
+                                        </div>
+                                        <!-- /calendar widget -->
+                                   </div>
+                                </div>
+                            {% else %}
+                            <div class="alert alert-primary no-border text-center animated fadeIn text-bold">
+                                <button type="button" class="close" data-dismiss="alert"><span>×</span><span class="sr-only">Close</span></button>
+                                No booking details
+                            </div>
+                            {% endif %}
+                            <!--./avalibilty-->
+                        </div>
+                    </div>
+                    <!--./availability-->
+                    <!--booking tab-->
+                    <div class="tab-pane " id="room-booking">
+                        <!--listbooks-->
+                        <div class="panel panel-flat" id="vue-list">
+                            <div class="panel-body no-padding">
+
+                                <div class="">
+                                  <table class="table room-striped room-hover dataroom-header-footer" style="border-bottom:1px solid #ddd;">
+                                        <thead>
+                                          <tr class="bg-primary">
+                                            <th>Invoice</th>
+                                            <th>Room</th>
+                                            <th>Days</th>
+                                            <th>Check-in</th>
+                                            <th>Check-out</th>
+                                            <th>Customer</th>
+                                            <th>Cost</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody id="tb">
+                                        <!--loader-->
+                                        <tr v-if="loader" class="text-center">
+                                            <td colspan="8">
+                                                <div class="pace-demo">
+                                                    <div class="theme_xbox"><div class="pace_progress" data-progress-text="60%" data-progress="60"></div><div class="pace_activity"></div></div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <!--no data template-->
+                                        <template  v-else>
+                                        <tr v-if="items.length == 0" class="text-center">
+                                            <td colspan="8" class="text-bold animated zoomIn">
+                                                No Data Found !
+                                            </td>
+                                        </tr>
+                                        </template>
+                                        <!--listing template-->
+                                        <template v-for="item in items">
+                                            <tr>
+                                                <td>
+                                                    ${item.invoice_number}<br>
+                                                    <span v-show="item.active"><mark>active</mark></span>
+                                                </td>
+                                                <td>${item.room_name}</td>
+                                                <td>${item.days}</td>
+                                                <td>${item.date_in}</td>
+                                                <td>${item.date_out}</td>
+                                                <td>${item.customer_name}</td>
+                                                <td>${item.price_amount}</td>
+
+                                            </tr>
+                                        </template>
+
+
+                                        </tbody>
+                                   </table>
+                                </div>
+                            </div>
+
+                             <style type="text/css">
+                               .pagination{margin-bottom: 0px;}
+                             </style>
+                             <div class="row mt-15 media-none">
+                             <div class="col-md-12">
+                              <div class="col-md-4">
+                               <div class="col-md-12">
+                                <div class="col-md-6 mt-10">
+                                 <label>display list size</label>
+                                </div>
+                                <div class="col-md-6 media-none">
+                                  <div class="form-group">
+                                     <select v-model="page_size" @change="inputChangeEvent" class="bootstrap-select" style="display: none;" data-width="100%" tabindex="-98">
+                                        <option value="10" selected>No:</option>
+                                        <option value="5">5</option>
+                                        <option value="10">10</option>
+                                        <option value="20">20</option>
+                                      </select>
+                                  </div>
+                                </div>
+                              </div>
+                              </div>
+                              <div class="col-md-4" id="media-none">
+                                  <div class="text-center bootpag-callback p2-pag" style="">
+                                </div>
+                               </div>
+                                <div class="col-md-4">
+                                 <div class="col-md-12 mt-5">
+                                  <div class="pull-right pages-nav"></div>
+                                 </div>
+                                </div>
+                              </div>
+                             </div>
+                             <input type="hidden" id="page_size" val="">
+                        </div>
+                        <!--./list books-->
+                    </div>
+
+                    <!--image tab-->
+                    <div class="tab-pane has-padding" id="room-images">
+                        <!--image -->
+                         <div class="panel panel-flat animated fadeIn" >
+                            <div class="panel-body">
+                                <div class="row">
+
+                                    <div class="hidden vue_component__upload--image">
+                                        <div class="upload_image_form__thumbnails">
+                                            {% for image in room.room_images.all %}
+                                            <div class="upload_image_form__thumbnail" id="delete-image{{image.pk}}"  >
+                                                <span class="bg-primary text-white delete-image" data-pk="{{image.pk}}" data-href="{% url 'dashboard:room-delete-image' pk=image.pk %}">
+                                                &#x2716;
+                                                </span>
+                                                <a href="{{ image.image.url }}" data-popup="lightbox" rel="gallery" class="">
+                                                  <img src="{{ image.image.url }}" style="opacity: 9;">
+                                                </a>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+
+                                     <div class="form-group" id="vue-app2">
+                                        <upload-image class="form-control styled" url="" name="" max_files=""></upload-image>
+                                     </div>
+                                </div>
+                            </div>
+                         </div>
+                        <!--./image-->
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+
+
+
+<input type="hidden" class="pageUrls"
+       {% if room.pk %}
+       data-bookinglisturl="{% url 'booking-api:api-room-booking-list' pk=room.pk %}"
+       {% endif %}
+       data-roomurl="{% url 'dashboard:room-list' %}"
+       data-amenitiesurl="{% url 'dashboard:fetch-amenities' %}"
+       data-addamenitiesurl="{% url 'dashboard:add-amenities' %}"
+       data-variantdetail="{% url 'dashboard:have-variants' %}"
+       data-addattrurl="{% url 'dashboard:product-attr-add' %}"
+       data-addclassurlb="{% url 'dashboard:attr_list_f32d' %}"
+       {% if room.pk %}
+       data-uploadimages = "{% url 'dashboard:room-add-image' pk=room.pk %}"
+       {% endif %}
+       data-pk="{{room.pk}}"
+       data-roomdata="{% url 'dashboard:room-add' %}"
+       data-addclassurl="{% url 'dashboard:product-class-form32b' %}">
+
+<template id="uploader-temp">
+    <div class="row">
+        <show-images :rooms="room_images" :refresh="_refresh_images"></show-images>
+        <div class="vue_component__upload--image" v-bind:class="{ 'dragover': onDragover }">
+        <form v-bind:id="'upload_image_form--' + name" enctype="multipart/form-data">
+            <div class="upload_image_form__thumbnails">
+                <div v-for="(value, key) in files" class="upload_image_form__thumbnail" v-on:click="fileView($event, key)"
+                        v-bind:class="{ 'uploaded': value.uploaded, 'bad-size': value.bad_size }" >
+                    <span v-on:click="fileDelete($event, key)">
+                    &#x2716;
+                    </span>
+                    <img v-bind:src="image[key]" v-bind:class="{ 'show': image[key]}">
+                </div>
+            </div>
+            <input class="file-styled" type="file" v-bind:id="'upload_image_form__input--' + name" hidden multiple />
+            <div>
+                <button type="submit"
+                    v-bind:class="button_class"
+                    v-on:click="submit"
+                    v-bind:disabled="onUploading"
+                    v-html="button_html"></button>
+            </div>
+        </form>
+    </div>
+    </div>
+</template>
+<template id="show-images">
+    <div class="vue_component__upload--image">
+        <div class="upload_image_form__thumbnails">
+            <div class="upload_image_form__thumbnail" v-for="r in rooms">
+                <div  :id="'delete-image'+r.id"  >
+                    <span class="bg-primary text-white delete-image cursor-pointer" :data-pk="r.id" @click="deleteImage(r.id)">
+                    &#x2716;
+                    </span>
+                    <a :href="r.image.medium_square_crop" data-popup="lightbox" rel="gallery" class="">
+                      <img :src="r.image.medium_square_crop" style="opacity: 9;">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <pre>${rooms}</pre>
+</template>
+{% endblock%}
+{% block custom_js %}
+<script>
+    var pk;
+    {% if room.pk %}
+        pk = {{room.pk}};
+        console.log(pk);
+    {% endif %}
+</script>
+<script type="text/javascript" src="{% static 'backend/js/plugins/forms/selects/bootstrap_multiselect.js' %}"></script>
+<script type="text/javascript" src="{% static 'backend/js/plugins/media/fancybox.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'backend/js/core/libraries/jquery_ui_widgets.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'backend/js/pages/form_multiselect.js' %}"></script>
+<script type="text/javascript" src="{% static 'backend/js/plugins/pickers/datetimepicker/bootstrap-datetimepicker.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'backend/js/plugins/pagination/jquery.twbsPagination.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'backend/js/plugins/forms/selects/bootstrap_select.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'backend/js/room/add-room.js' %}"></script>
+<script type="text/javascript" src="{% static 'backend/js/plugins/tokenize/tokenize2.js' %}"></script>
+<script type="text/javascript" src="{% static 'backend/js/plugins/vue/vue.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'backend/js/plugins/vue/vue-resource.js' %}"></script>
+<script src="{% static 'backend/js/plugins/vue/axios.min.js' %}"></script>
+
+<script type="text/javascript" src="{% static 'backend/js/room/vue/add_app.js' %}"></script>
+<!--<script type="text/javascript" src="{% static 'backend/js/booking/vue/booking.js' %}"></script>-->
+<!--<script type="text/javascript" src="{% static 'backend/js/room/book-room.js' %}"></script>-->
+<script type="text/javascript" src="{% static 'backend/js/booking/vue/listing-single.js' %}"></script>
+<script>
+     // Checkboxes/radios (Uniform)
+    // ------------------------------
+
+    // Default initialization
+    $(".styled, .multiselect-container input").uniform({
+        radioClass: 'choice'
+    });
+ // File input
+    $(".file-styled").uniform({
+        fileButtonClass: 'action btn bg-pink-400'
+    });
+    // File input
+    $(".file-styled").uniform({
+        wrapperClass: 'bg-blue',
+        fileButtonHtml: '<i class="icon-file-plus"></i>'
+    });
+
+     // Primary
+    $(".control-primary").uniform({
+        radioClass: 'choice',
+        wrapperClass: 'border-primary-600 text-primary-800'
+    });
+    $('.bootstrap-select').selectpicker();
+    //  disable image tab when room is not added
+    var tabImages = $('#tab-images');
+    {% if not room.pk %}
+        tabImages.on('click',function(){
+            alertUser('To enable this tab, add property first','bg-warning','Add property first');
+        });
+    {% endif %}
+
+    $(function() {
+
+        // Initialize lightbox
+        $('[data-popup="lightbox"]').fancybox({
+            padding: 3
+        });
+
+    });
+
+
+    $('.daterange-basic').daterangepicker({
+        applyClass: 'bg-slate-600',
+        cancelClass: 'btn-default',
+    });
+
+    // Date picker
+    // ------------------------------
+
+    // Default functionality
+    var check_out = "{{room.booking_room.first.check_out|date:'Y-m-d'}}";
+    var check_in = "{{room.booking_room.first.check_in|date:'Y-m-d'}}";
+
+    $(".datepicker").datepicker({
+        changeMonth: true,
+        changeYear: true,
+        dateFormat : 'dd-mm-yy',
+        defaultDate: new Date(new Date(moment(check_out)))
+        }).datepicker( "option", "disabled", true );
+    $(".datepicker-check-in").datepicker({
+        changeMonth: true,
+        changeYear: true,
+        dateFormat : 'dd-mm-yy',
+        defaultDate: new Date(new Date(moment(check_in)))
+        }).datepicker( "option", "disabled", true );
+
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,62 @@
+{
+    "count": 4,
+    "total_pages": 1,
+    "results": [
+        {
+            "id": 10,
+            "name": "Chicken Soup (boiled)",
+            "description": null,
+            "category": {
+                "id": 1,
+                "name": "Soups"
+            },
+            "quantity": 16,
+            "price": "350.00",
+            "update_url": "http://127.0.0.1:8000/menu/api/update/10/",
+            "delete_url": "http://127.0.0.1:8000/menu/api/delete/10/"
+        },
+        {
+            "id": 9,
+            "name": "Red Lentil Soup",
+            "description": null,
+            "category": {
+                "id": 1,
+                "name": "Soups"
+            },
+            "quantity": 54,
+            "price": "350.00",
+            "update_url": "http://127.0.0.1:8000/menu/api/update/9/",
+            "delete_url": "http://127.0.0.1:8000/menu/api/delete/9/"
+        },
+        {
+            "id": 8,
+            "name": "Green Salad",
+            "description": null,
+            "category": {
+                "id": 2,
+                "name": "Salads"
+            },
+            "quantity": 90,
+            "price": "12.00",
+            "update_url": "http://127.0.0.1:8000/menu/api/update/8/",
+            "delete_url": "http://127.0.0.1:8000/menu/api/delete/8/"
+        },
+        {
+            "id": 5,
+            "name": "Shepherd Salad",
+            "description": null,
+            "category": {
+                "id": 2,
+                "name": "Salads"
+            },
+            "quantity": 135,
+            "price": "300.00",
+            "update_url": "http://127.0.0.1:8000/menu/api/update/5/",
+            "delete_url": "http://127.0.0.1:8000/menu/api/delete/5/"
+        }
+    ],
+    "links": {
+        "previous": null,
+        "next": null
+    }
+}

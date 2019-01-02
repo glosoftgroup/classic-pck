@@ -1,0 +1,39 @@
+{% load staticfiles %}
+{% load prices_i18n %}
+{% load humanize %}
+ {% if orders %}
+    {% for order in orders %}
+      <tr class='clickable-row' id="{{sale.pk }}">
+        <td class="td" data-href="{% url 'dashboard:order-detail' pk=order.pk point=point_pk %}">{{order.created|date:"d-m-Y H:i a"}}</td>
+        <td class="td" data-href="{% url 'dashboard:order-detail' pk=order.pk point=point_pk %}">{{order.invoice_number }}</td>
+        <td class="td" data-href="{% url 'dashboard:order-detail' pk=order.pk point=point_pk %}">{{order.get_status|title }}</td>
+        <td class="td" data-href="{% url 'dashboard:order-detail' pk=order.pk point=point_pk %}">
+          {% if order.table.name %}
+            {{ order.table.name }}
+         {% elif order.room.name %}  
+            Rm {{ order.room.name }} 
+         {% else %} Take Away {% endif %}
+        </td>
+       <td class="td" data-href="{% url 'dashboard:order-detail' pk=order.pk point=0 %}">
+                    {% if order.user.name %}
+                      {{ order.user.name }}
+                   {% elif order.user.email %}
+                      {{ order.user.email }}
+                   {% else %} Waiter {% endif %}
+        </td>
+        <td class="td" data-href="{% url 'dashboard:order-detail' pk=order.pk point=point_pk %}">{{order.quantity}}</td>
+        <td class="td" data-href="{% url 'dashboard:order-detail' pk=order.pk point=point_pk %}"><span class="pull-right">{{order.total_net|intcomma }}</span></td>
+      </tr>
+    {% endfor %}
+
+        <script type="text/javascript">
+        $(document).ready(function(){
+
+            $(".td").click(function(){
+                  window.location = $(this).data("href");
+              });
+        });
+        </script>
+ {% else %}
+ <tr><td colspan="7"><h2 class="text-center">No Orders Summary Available</h2></td></tr>
+{% endif %}

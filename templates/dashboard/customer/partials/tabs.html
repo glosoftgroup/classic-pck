@@ -1,0 +1,254 @@
+
+    <div class="panel panel-flat">
+      <div class="panel-body">
+        <div class="tabbable">
+          <ul class="nav nav-tabs nav-tabs-highlight">
+            <li class="active" id="bio-tab"><a href="#bio" data-toggle="tab" class="legitRipple" aria-expanded="false">bio data</a></li>
+            <li class="" id="dependants-tab"><a href="#dependants" data-toggle="tab" class="legitRipple" aria-expanded="true">Next of Kin</a></li>
+            <li class="" id="house-tab"><a href="#house" data-toggle="tab" class="legitRipple" aria-expanded="true">Property Details</a></li>
+            <li class="" id="payment-tab"><a href="#payment" data-toggle="tab" class="legitRipple" aria-expanded="true">payments</a></li>
+          </ul>
+
+          <div class="tab-content">
+             <!-- contact -->
+            <div class="tab-pane animated fadeIn active" id="bio">
+              <div class="rows">
+                <div class="col-md-12">
+                  <form class="form" enctype="multipart/form-data" id="user-details" name="user-details">
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="row">
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label class="display_label">Name</label>
+                            <h6>{% if user.name %}{{user.name}}{% else %} --- {% endif %}</h6>
+                          </div> 
+                          <div class="form-group">
+                            <label class="display_label">Mobile No.</label>
+                            <h6>{% if user.mobile %}{{user.mobile}}{% else %} --- {% endif %}</h6>
+                           </div>
+                           
+                        </div>
+
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label class="display_label">Id / Passport No.</label>
+                            <h6>{% if user.nid %}{{user.nid}}{% else %} --- {% endif %}</h6>
+                          </div>
+                           <div class="form-group">
+                              <label class="display_label">Email address</label>
+                              <h6>{% if user.email %}{{user.email}}{% else %} --- {% endif %}</h6>
+                           </div>          
+                           
+                        </div>
+
+                        <div class="col-md-4">
+                           <div class="form-group">
+                              <label class="display_label">Nationality</label>
+                                <h6>{% if user.nationality %}{{user.nationality}}{% else %} --- {% endif %}</h6>
+                            </div>                  
+                           
+                        </div>
+                      </div>
+                      <div class="row">
+                          <div class="col-md-12">
+                            <label class="display_label">Description</label>
+                              <h6>{% if user.description %}{{user.description}}{% else %} --- {% endif %}</h6>
+                       </div>
+                     </div>
+                    </div>
+                  </div>
+                </form>
+                </div>
+              </div>
+            </div>
+             <!-- ./contact -->
+            <div class="tab-pane animated fadeIn" id="dependants">
+              <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                     <div class="col-md-12">
+                       <table class="table table-striped table-hover fixed_headers"style="margin-top:20px;">
+                             <thead>
+                               <tr class="bg-slate">
+                                 <th>Name</th>
+                                 <th>ID/Passport No</th>
+                                 <th>Nationality</th>
+                                 <th>Phone</th>
+                                 <th>Relation</th>
+                                 <th>Maturity Status</th>
+                               </tr>
+                             </thead>
+                             <tbody id="contact-list">
+                              {% if  user.get_addresses %}
+                             {% for address in user.get_addresses %}
+                               <tr id="tr{{address.pk}}">
+                                 <!-- contact name -->
+                                 <td>{{ address.name }}</td>
+                                 <!-- job position -->
+                                 <td>{{ address.id_no }}</td>
+                                 <!-- email -->
+                                 <TD>{{ address.nationality }}</TD>
+                                 <!-- pphone -->
+                                 <td>{{ address.phone }}</td>
+                                 <!-- adddress -->
+                                 <td>{{ address.relation|title }}</td>
+                                 <td>{{ address.maturity_status | title}}</td>
+                                 
+                               </tr>
+                                {% endfor %}
+                                {% else %}
+                                <tr>
+                                  <td colspan="6" class="text-center">
+                                    <span class="text-mute">
+                                      No Contacts
+                                    </span>
+                                  </td>
+                                </tr>
+                                 {% endif %}
+                             </tbody>
+                           </table>
+                         </div>              
+                       </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-pane animated fadeIn" id="house">            
+              <div class="row">
+                <div class="col-md-12">
+                   <form class="form" enctype="multipart/form-data" id="user-details" name="user-details">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="row">
+                          <div class="col-md-4">
+                            <div class="form-group">
+                              <label class="display_label">Property Name</label>
+                              <h6>{% if room.name %}{{room.name}}{% else %}---{% endif %}</h6>
+                            </div> 
+                            <div class="form-group">
+                              <label class="display_label">Period</label>
+                              <h6>
+                                Check In: {% if booking.check_in %} {{booking.check_in}} {% else %} --- {% endif %} <br>
+                              Check Out: {% if booking.check_out %}  {{booking.check_out}} {% else %} ---{% endif %}</h6>
+                             </div>
+                             
+                          </div>
+
+                          <div class="col-md-4">
+                            <div class="form-group">
+                              <label class="display_label">Property Type</label>
+                              <h6>{% if room.room_type %}{{room.room_type}} {% else %} ---{% endif %}</h6>
+                            </div>
+                             <div class="form-group">
+                                <label class="display_label">Booked On</label>
+                                <h6>{% if booking.created %}{{booking.created}}{% else %} ---{% endif %}</h6>
+                             </div>          
+                             
+                          </div>
+
+                          <div class="col-md-4">
+                              <div class="form-group">
+                                <label class="display_label">Wing</label>
+                                <h6>{% if room.room_wing %}{{room.room_wing}} {% else %} ---{% endif %}</h6>
+                              </div>
+                              <div class="form-group">
+                                <label class="display_label">Amount</label>
+                                <h6>Total: {% if booking.price %}{{booking.price.gross}} {% else %} ---{% endif %}</h6>
+                                <h6> Balance:
+                                  {% if booking.pk %}
+                                    {% if booking.balance_with_charges.gross == 0%}
+                                      {{booking.balance.gross}} 
+                                    {% else %} 
+                                      {{booking.balance_with_charges.gross}}
+                                    {% endif %}
+                                  {% else %}
+                                    ---
+                                  {% endif %}
+                                </h6>
+                                {% if booking.pk and booking.service_charges.gross != 0 %}
+                                <h6>Service Charge: {{booking.service_charges.gross}}</h6>
+                                {% endif %}
+                                {% if booking.pk %}
+                                  <h6><a href="{% url 'dashboard:booking-invoice' pk=booking.pk %}">Generat Invoice</a></h6>
+                                {% endif %}
+                              </div>                 
+                             
+                          </div>
+                        </div>
+
+                          <div class="row">
+                             <div class="col-md-4">
+                               <label class="display_label">Service Charges</label>
+                               <h6>{% if room.service_charges %}{{room.service_charges}}{% else %} ---{% endif %}</h6>
+                             </div>
+                           </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                              <label class="display_label">Features</label>
+                              
+                                <h6>
+                                  {% if room%}
+                                    {% if room.bedrooms%} 
+                                      <span class="bg-slate house_span">
+                                        Bedrooms: {{room.bedrooms}}
+                                      </span>
+                                    {% endif %}
+                                    {% if room.parking_space %}
+                                      <span class="bg-slate house_span">
+                                        Packing Space(s): {{room.parking_space}}
+                                      </span>
+                                    {% endif %}
+                                    {% if room.units %}
+                                      <span class="bg-slate house_span">
+                                        Units: {{room.units}} 
+                                      </span>
+                                    {% endif %}
+                                    {% if room.floor_space%}
+                                      <span class="bg-slate house_span">
+                                        Floor Space: {{room.floor_space}}
+                                      </span>
+                                    {% endif %}
+                                  {% else %} ---{% endif %}
+                                </h6>
+                                
+                         </div>
+                       </div>
+                       <div class="row">
+                         <div class="col-md-12">
+                           <label class="display_label">Amenities</label>
+                              <h6>
+                                {% if room.amenities %}
+                                  {% for i in room.amenities.all %}
+                                    <span class="bg-slate house_span" style="padding:6px 12px;border-radius: 20px;margin-right:3px; ">{{i.name}}</span> 
+                                  {% endfor %}
+                                {% else %} 
+                                  ---
+                                {% endif %}
+                              </h6>
+                         </div>
+                       </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-pane animated fadeIn" id="payment">            
+              {% include 'dashboard/customer/partials/payment_tab.html' %}
+            </div>
+
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+
+<input type="hidden" class="pageUrls"
+  data-bookinglisturl="{% url 'booking-api:api-customer-booking-list' pk=user.pk %}"
+>
+<!--end listing-->

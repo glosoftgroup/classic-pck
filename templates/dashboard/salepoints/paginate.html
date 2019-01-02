@@ -1,0 +1,80 @@
+             {% load staticfiles %}
+                  {% if points %}
+                  {% for point in points %}
+                  <tr class='clickable-row' id="{{point.pk }}">
+                    <td class="td" data-href="{% url 'salepoints:salepoint-edit' pk=point.pk %}" data-mtitle="Update {{point.name}}" data-m="#edit_modal_instance" data-nm="{{point.name}}" data-desc="{{point.description}}">{{point.name}}</td>
+                    <td class="td" data-href="{% url 'salepoints:salepoint-edit' pk=point.pk %}" data-mtitle="Update {{point.name}}" data-m="#edit_modal_instance" data-nm="{{point.name}}" data-desc="{{point.description}}">{{point.description}}</td>
+                    {% if perms.salepoints.delete_salepoint or perms.salepoints.change_salepoint %}
+                    <!-- actions -->
+
+                      <td class="text-center">
+                          <div class="btn-group">
+                          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            action <span class="caret"></span>
+                          </button>
+                          <ul class="dropdown-menu edit-dropdown">
+                         {% if perms.salepoints.change_salepoint %}
+                            <li><a href="javascript:;" class="td" data-href="{% url 'salepoints:salepoint-edit' pk=point.pk %}" data-mtitle="Update {{point.name}}" data-m="#edit_modal_instance" data-nm="{{point.name}}" data-desc="{{point.description}}"><i class="icon-pencil7"></i> EDIT</a></li>
+                         {% endif %}
+                         {% if perms.salepoints.delete_salepoint %}
+                            <li>
+                              <a data-ta="#modal_instance" data-title="Delete Sale Point {{ point.name }} ?" data-href="{% url 'salepoints:salepoints-delete' pk=point.pk %}" data-name="{{ point.name}}" data-id="{{ point.pk }}"
+                             class="modal-trigger del-btn"><i class="icon-trash" data-toggle="modal"></i> DELETE
+                             </a>
+                            </li>
+                         {% endif %}
+                          </ul>
+                        </div>
+                      </td>
+                       {% endif %}
+                  </tr>
+                  {% endfor %}
+                {% else %}
+                    <tr>
+                      <td colspan="3">
+                        <h2 class="text-center">
+                          No Sale Points Available
+                        </h2>
+                      </td>
+                    </tr>
+                {% endif %}
+                 
+
+
+            <script type="text/javascript">
+                 $(document).ready(function(){
+
+                    /* clicked the submit button */
+                    $('.del').on('click', function (e) {
+                        var f = document.getElementById('delform');
+                        var formData = new FormData(f);
+                        var id = $(this).data('id');
+                        var url = $(this).data('href');
+                        $.ajax({
+                            url: url,
+                            type: "POST",
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            success:function(data){        
+                              $('#modal_instance').modal('hide');
+                              $('#tb #'+id).remove();            
+                              $.jGrowl('User deleted successfully', {
+                                header: 'Well done!',
+                                theme: 'bg-success'
+                              });
+                              window.location.reload();
+                           // $("#mydiv").load(location.href + " #mydiv");
+                            },
+                            error:function(error){
+                              console.log(error);
+                              $.jGrowl('Error deleting Staff', {
+                                  header: 'Oh snap!',
+                                  theme: 'bg-danger'
+                              });
+                            }
+                        });
+                    });
+      
+                 });
+               </script>

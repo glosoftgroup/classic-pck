@@ -1,0 +1,26 @@
+{
+  "amount_paid": "360.00",
+  "discount_amount": "0.00",
+  "old_orders": [],
+  "terminal": 1,
+  "total_tax": "0.00",
+  "room": "",
+  "balance": "0.00",
+  "sub_total": "360.00",
+  "ordered_items": [
+    {
+      "quantity": 1,
+      "total_cost": 360,
+      "unit_cost": 360,
+      "transfer_id": "12",
+      "sku": "shakel01",
+      "product_name": "Shakes ( Lemon)",
+      "product_category": "Shakes"
+    }
+  ],
+  "payment_data": [],
+  "invoice_number": "RET#16FB-194",
+  "total_net": "360.00",
+  "status": "fully-paid",
+  "payment_options": []
+}
