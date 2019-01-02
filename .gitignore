@@ -12,7 +12,7 @@
 !.eslintrc.json
 *.log
 *.pot
-*.pyc
+!.pyc
 local_settings.py
 __pycache__/
 build/
