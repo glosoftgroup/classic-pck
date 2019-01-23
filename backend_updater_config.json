@@ -26,8 +26,7 @@
 		"title": "Happy hour discount", 
 		"description": "One can choose any product or number of products and define their prices as discounts. Add time and date to be applied."
 	},
-  	{"title": "New dashboard reports", "description": ""},
-  	{"title": "", "description": ""}
+  	{"title": "New dashboard reports", "description": ""}
   ],
   "changedfiles": [
     ".gitignore",
