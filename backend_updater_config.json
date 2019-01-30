@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0",
+  "version": "0.0.0",
   "last_version": "0.0.0",
   "changelog": {
     "date": "Images/Sun.png",
@@ -17,10 +17,6 @@
   	{
 		"title": "New reports design", 
 		"description": "Added download capability of the pdfs"
-	},
-	{
-		"title": "Tax reports", 
-		"description": "Tax calculations based no sales and reports presentation"
 	},
 	{
 		"title": "Happy hour discount", 

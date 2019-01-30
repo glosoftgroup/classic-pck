@@ -1,17 +1,17 @@
 {
-  "name": "classic-pos",
+  "name": "saleor",
   "version": "0.0.0",
   "main": "Gruntfile.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/glosoftgroup/classic-pck.git"
+    "url": "git://github.com/mirumee/saleor.git"
   },
-  "author": "Glosoft Group",
+  "author": "Mirumee Software",
   "license": "BSD-3-Clause",
   "bugs": {
-    "url": "https://github.com/glosoftgroup/classic-pck/issues"
+    "url": "https://github.com/mirumee/saleor/issues"
   },
-  "homepage": "http://www.glosoftgroup.com/",
+  "homepage": "http://getsaleor.com/",
   "engines": {
     "node": "6.x",
     "yarn": "0.20.x"
