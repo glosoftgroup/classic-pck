@@ -82,7 +82,7 @@ python-dateutil==2.6.0
 python-openid==2.2.5
 pytz==2016.10
 redis==2.10.5
-reportlab==3.4.0
+reportlab==3.5.55
 requests==2.12.4
 requests-oauthlib==0.7.0
 s3transfer==0.1.10
