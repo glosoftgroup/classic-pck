@@ -61,7 +61,7 @@ mock==2.0.0
 oauthlib==2.0.1
 packaging==16.8
 pbr==1.10.0
-Pillow==3.4.2
+Pillow==9.3.0
 premailer==3.0.1
 prices==0.5.8
 promise==2.1 # via graphene, graphene-django, graphql-core, graphql-relay
